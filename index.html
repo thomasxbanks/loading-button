@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Loading button</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0'>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .button-feedback {
+            -webkit-appearance: none;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 8px;
+            padding: 0 16px;
+            line-height: 48px;
+            width: 200px;
+            transition: background ease-in 200ms;
+            cursor: pointer;
+        }
+
+        .button-feedback:focus {
+            outline: 0;
+        }
+
+        .button-feedback .material-icons {
+            display: none;
+            vertical-align: middle;
+        }
+
+        [data-state="ready"] {
+            background: #0af;
+        }
+
+        [data-state="loading"] {
+            background: #0af;
+        }
+
+        [data-state="success"] {
+            background: #0a0;
+        }
+
+        [data-state="failed"] {
+            background: #a00;
+        }
+
+        [data-state="ready"] [class^="ready"],
+        [data-state="loading"] [class^="loading"],
+        [data-state="success"] [class^="success"],
+        [data-state="failed"] [class^="failed"] {
+            display: inline-block;
+        }
+
+        [data-state="loading"] .loading {
+            animation: rotate 600ms infinite;
+        }
+        [data-state="success"] .success, [data-state="failed"] .failed {
+            animation: pulse 600ms 1;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="button-feedback" data-state="ready">
+      Download File
+      <span class="ready material-icons">file_download</span>
+      <span class="loading material-icons">refresh</span>
+      <span class="success material-icons">check</span>
+      <span class="failed material-icons">close</span>
+    </button>
+    <script>
+        let button = document.querySelector('button')
+        button.addEventListener('click', (e) => {
+            e.preventDefault()
+            button.setAttribute('data-state', 'loading')
+            setTimeout(() => {
+
+                // Simulate success/failure of response
+                if (new Date().getTime() % 2 == 0) {
+                    button.setAttribute('data-state', 'failed')
+                } else {
+                    button.setAttribute('data-state', 'success')
+                }
+
+            }, 2000) // Simulate response time
+        })
+    </script>
+</body>
+
+</html>
