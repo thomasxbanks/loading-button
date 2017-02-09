@@ -86,6 +86,10 @@
             outline: 0;
         }
 
+        .button-feedback:active {
+            animation: click 200ms 1;
+        }
+
         .button-feedback .material-icons {
             display: none;
             vertical-align: middle;
@@ -97,7 +101,6 @@
 
         [data-state="loading"] {
             background: hsla(200, 100%, 50%, 1);
-            animation: click 200ms 1;
             position: relative;
         }
 
