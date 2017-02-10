@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Loading button</title>
+    <title>Loading button example page</title>
     <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0'>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -86,7 +86,7 @@
             outline: 0;
         }
 
-        .button-feedback:active {
+        .button-feedback:not(:disabled):active {
             animation: click 200ms 1;
         }
 
@@ -95,16 +95,16 @@
             vertical-align: middle;
         }
 
-        [aria-label="ready"] {
+        [aria-label="Download File"] {
             background: hsla(200, 100%, 50%, 1);
         }
 
-        [aria-label="downloading"] {
+        [aria-label="File Downloading"] {
             background: hsla(200, 100%, 50%, 1);
             position: relative;
         }
 
-        [aria-label="downloading"]:after {
+        [aria-label="File Downloading"]:after {
             content: "";
             display: block;
             position: absolute;
@@ -117,7 +117,7 @@
             box-shadow: inset 0 -10px 0 hsla(200, 100%, 80%, 1);
         }
 
-        [aria-label="downloading"]:before {
+        [aria-label="File Downloading"]:before {
             content: "";
             display: block;
             position: absolute;
@@ -129,18 +129,18 @@
             animation: downloading 1500ms infinite;
         }
 
-        [aria-label="success"] {
+        [aria-label="File Downloaded"] {
             background: hsla(90, 80%, 30%, 1);
         }
 
-        [aria-label="failed"] {
+        [aria-label="Download Failed"] {
             background: hsla(360, 80%, 40%, 1);
         }
 
-        [aria-label="ready"] .button-feedback_icon.ready,
-        [aria-label="downloading"] .button-feedback_icon.ready,
-        [aria-label="success"] .button-feedback_icon.success,
-        [aria-label="failed"] .button-feedback_icon.failed {
+        [aria-label="Download File"] .button-feedback_icon.ready,
+        [aria-label="File Downloading"] .button-feedback_icon.ready,
+        [aria-label="File Downloaded"] .button-feedback_icon.success,
+        [aria-label="Download Failed"] .button-feedback_icon.failed {
             display: inline-block;
         }
 
@@ -152,28 +152,32 @@
 </head>
 
 <body>
-    <button class="button-feedback" aria-label="ready">
+    <button class="button-feedback" aria-label="Download File">
       <span class="button-feedback_label">Download File</span>
       <i class="ready button-feedback_icon material-icons">file_download</i>
       <i class="success button-feedback_icon material-icons">done</i>
       <i class="failed button-feedback_icon material-icons">warning</i>
     </button>
     <script>
-        let button = document.querySelector('button')
+        let button = document.querySelector('.button-feedback')
         button.addEventListener('click', (e) => {
             e.preventDefault()
-            button.setAttribute('aria-label', 'downloading')
+            e.stopPropagation()
+            e.cancelBubble = true
+            button.setAttribute('aria-label', 'File Downloading')
             button.setAttribute('disabled', 'disabled')
             button.querySelector('.button-feedback_label').innerText = 'Downloading File'
             setTimeout(() => {
 
                 // Simulate success/failure of response
                 if (new Date().getTime() % 2 == 0) {
-                    button.setAttribute('aria-label', 'failed')
+                    button.setAttribute('aria-label', 'Download Failed')
+                    button.setAttribute('aria-live', 'assertive')
                     button.removeAttribute('disabled')
                     button.querySelector('.button-feedback_label').innerText = 'Download failed'
                 } else {
-                    button.setAttribute('aria-label', 'success')
+                    button.setAttribute('aria-label', 'File Downloaded')
+                    button.setAttribute('aria-live', 'assertive')
                     button.setAttribute('disabled', 'disabled')
                     button.querySelector('.button-feedback_label').innerText = 'File Downloaded'
                 }
