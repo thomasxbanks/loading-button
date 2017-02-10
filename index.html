@@ -95,21 +95,25 @@
             vertical-align: middle;
         }
 
-        [aria-label="Download File"] {
+        [data-state="ready"] {
             background: hsla(200, 100%, 50%, 1);
         }
 
-        [aria-label="File Downloading"] {
+        [data-state="in-progress"] {
             background: hsla(200, 100%, 50%, 1);
             position: relative;
         }
 
-        [aria-label="File Downloading"]:after {
-            content: "";
-            display: block;
-            position: absolute;
-            right: 0;
-            bottom: 0;
+        [data-state="in-progress"]:before, [data-state="in-progress"]:after {
+          content: "";
+          display: block;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          height: 4px;
+        }
+
+        [data-state="in-progress"]:after {
             left: 0;
             z-index: 0;
             width: 100%;
@@ -117,30 +121,24 @@
             box-shadow: inset 0 -10px 0 hsla(200, 100%, 80%, 1);
         }
 
-        [aria-label="File Downloading"]:before {
-            content: "";
-            display: block;
-            position: absolute;
-            right: 0;
-            bottom: 0;
+        [data-state="in-progress"]:before {
             z-index: 1;
-            height: 4px;
             box-shadow: inset 0 -4px 0 hsla(200, 100%, 40%, 1);
             animation: downloading 1500ms infinite;
         }
 
-        [aria-label="File Downloaded"] {
+        [data-state="success"] {
             background: hsla(90, 80%, 30%, 1);
         }
 
-        [aria-label="Download Failed"] {
+        [data-state="error"] {
             background: hsla(360, 80%, 40%, 1);
         }
 
-        [aria-label="Download File"] .button-feedback_icon.ready,
-        [aria-label="File Downloading"] .button-feedback_icon.ready,
-        [aria-label="File Downloaded"] .button-feedback_icon.success,
-        [aria-label="Download Failed"] .button-feedback_icon.failed {
+        [data-state="ready"] .button-feedback_icon.ready,
+        [data-state="in-progress"] .button-feedback_icon.ready,
+        [data-state="success"] .button-feedback_icon.success,
+        [data-state="error"] .button-feedback_icon.failed {
             display: inline-block;
         }
 
@@ -152,7 +150,7 @@
 </head>
 
 <body>
-    <button class="button-feedback" aria-label="Download File">
+    <button class="button-feedback" aria-label="Download File" aria-live="assertive" data-state="ready">
       <span class="button-feedback_label">Download File</span>
       <i class="ready button-feedback_icon material-icons">file_download</i>
       <i class="success button-feedback_icon material-icons">done</i>
@@ -164,6 +162,7 @@
             e.preventDefault()
             e.stopPropagation()
             e.cancelBubble = true
+            button.setAttribute('data-state', 'in-progress')
             button.setAttribute('aria-label', 'File Downloading')
             button.setAttribute('disabled', 'disabled')
             button.querySelector('.button-feedback_label').innerText = 'Downloading File'
@@ -171,11 +170,13 @@
 
                 // Simulate success/failure of response
                 if (new Date().getTime() % 2 == 0) {
+                    button.setAttribute('data-state', 'error')
                     button.setAttribute('aria-label', 'Download Failed')
                     button.setAttribute('aria-live', 'assertive')
                     button.removeAttribute('disabled')
                     button.querySelector('.button-feedback_label').innerText = 'Download failed'
                 } else {
+                    button.setAttribute('data-state', 'success')
                     button.setAttribute('aria-label', 'File Downloaded')
                     button.setAttribute('aria-live', 'assertive')
                     button.setAttribute('disabled', 'disabled')
