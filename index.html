@@ -50,7 +50,7 @@
             }
         }
 
-        @keyframes loading {
+        @keyframes downloading {
             0% {
                 width: 0px;
                 left: 0;
@@ -90,21 +90,21 @@
             animation: click 200ms 1;
         }
 
-        .button-feedback .material-icons {
+        .button-feedback_icon {
             display: none;
             vertical-align: middle;
         }
 
-        [data-state="ready"] {
+        [aria-label="ready"] {
             background: hsla(200, 100%, 50%, 1);
         }
 
-        [data-state="loading"] {
+        [aria-label="downloading"] {
             background: hsla(200, 100%, 50%, 1);
             position: relative;
         }
 
-        [data-state="loading"]:after {
+        [aria-label="downloading"]:after {
             content: "";
             display: block;
             position: absolute;
@@ -117,7 +117,7 @@
             box-shadow: inset 0 -10px 0 hsla(200, 100%, 80%, 1);
         }
 
-        [data-state="loading"]:before {
+        [aria-label="downloading"]:before {
             content: "";
             display: block;
             position: absolute;
@@ -126,53 +126,56 @@
             z-index: 1;
             height: 4px;
             box-shadow: inset 0 -4px 0 hsla(200, 100%, 40%, 1);
+            animation: downloading 1500ms infinite;
         }
 
-        [data-state="success"] {
+        [aria-label="success"] {
             background: hsla(90, 80%, 30%, 1);
         }
 
-        [data-state="failed"] {
+        [aria-label="failed"] {
             background: hsla(360, 80%, 40%, 1);
         }
 
-        [data-state="ready"] [class^="ready"],
-        [data-state="loading"] [class^="ready"],
-        [data-state="success"] [class^="success"],
-        [data-state="failed"] [class^="failed"] {
+        [aria-label="ready"] .button-feedback_icon.ready,
+        [aria-label="downloading"] .button-feedback_icon.ready,
+        [aria-label="success"] .button-feedback_icon.success,
+        [aria-label="failed"] .button-feedback_icon.failed {
             display: inline-block;
         }
 
-        [data-state="loading"]:before {
-            animation: loading 1500ms infinite;
-        }
-
-        [data-state="success"] .success,
-        [data-state="failed"] .failed {
+        .button-feedback_icon.success,
+        .button-feedback_icon.failed {
             animation: pulse 600ms 1;
         }
     </style>
 </head>
 
 <body>
-    <button class="button-feedback" data-state="ready">
-      Download File
-      <span class="ready material-icons">file_download</span>
-      <span class="success material-icons">done</span>
-      <span class="failed material-icons">warning</span>
+    <button class="button-feedback" aria-label="ready">
+      <span class="button-feedback_label">Download File</span>
+      <i class="ready button-feedback_icon material-icons">file_download</i>
+      <i class="success button-feedback_icon material-icons">done</i>
+      <i class="failed button-feedback_icon material-icons">warning</i>
     </button>
     <script>
         let button = document.querySelector('button')
         button.addEventListener('click', (e) => {
             e.preventDefault()
-            button.setAttribute('data-state', 'loading')
+            button.setAttribute('aria-label', 'downloading')
+            button.setAttribute('disabled', 'disabled')
+            button.querySelector('.button-feedback_label').innerText = 'Downloading File'
             setTimeout(() => {
 
                 // Simulate success/failure of response
                 if (new Date().getTime() % 2 == 0) {
-                    button.setAttribute('data-state', 'failed')
+                    button.setAttribute('aria-label', 'failed')
+                    button.removeAttribute('disabled')
+                    button.querySelector('.button-feedback_label').innerText = 'Download failed'
                 } else {
-                    button.setAttribute('data-state', 'success')
+                    button.setAttribute('aria-label', 'success')
+                    button.setAttribute('disabled', 'disabled')
+                    button.querySelector('.button-feedback_label').innerText = 'File Downloaded'
                 }
 
             }, 4000) // Simulate response time
