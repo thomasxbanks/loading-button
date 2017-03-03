@@ -162,6 +162,20 @@
       <i class="success button-feedback_icon material-icons">done</i>
       <i class="error button-feedback_icon material-icons">warning</i>
     </button>
+
+    <button class="button-feedback" aria-label="Download File" aria-live="assertive" data-state="ready">
+      <span class="button-feedback_label">Download File</span>
+      <i class="ready button-feedback_icon material-icons">file_download</i>
+      <i class="success button-feedback_icon material-icons">done</i>
+      <i class="error button-feedback_icon material-icons">warning</i>
+    </button>
+
+    <button class="button-feedback" aria-label="Download File" aria-live="assertive" data-state="ready">
+      <span class="button-feedback_label">Download File</span>
+      <i class="ready button-feedback_icon material-icons">file_download</i>
+      <i class="success button-feedback_icon material-icons">done</i>
+      <i class="error button-feedback_icon material-icons">warning</i>
+    </button>
     <script>
         let setInProgress = (element, message) => {
             element.setAttribute('data-state', 'in-progress')
@@ -170,35 +184,38 @@
             element.querySelector('.button-feedback_label').innerText = message
         }
         let setSuccess = (element, message) => {
-            button.setAttribute('data-state', 'success')
-            button.setAttribute('aria-label', message)
-            button.setAttribute('disabled', 'disabled')
-            button.querySelector('.button-feedback_label').innerText = message
+            element.setAttribute('data-state', 'success')
+            element.setAttribute('aria-label', message)
+            element.setAttribute('disabled', 'disabled')
+            element.querySelector('.button-feedback_label').innerText = message
         }
         let setError = (element, message) => {
-            button.setAttribute('data-state', 'error')
-            button.setAttribute('aria-label', message)
-            button.removeAttribute('disabled')
-            button.querySelector('.button-feedback_label').innerText = message
+            element.setAttribute('data-state', 'error')
+            element.setAttribute('aria-label', message)
+            element.removeAttribute('disabled')
+            element.querySelector('.button-feedback_label').innerText = message
         }
 
-        const button = document.querySelector('.button-feedback')
+        const buttons = document.querySelectorAll('.button-feedback')
 
-        button.addEventListener('click', (e) => {
-            e.preventDefault()
+        buttons.forEach((button) => {
+            button.addEventListener('click', (e) => {
+              e.preventDefault()
 
-            setInProgress(button, 'File Downloading')
+              setInProgress(button, 'File Downloading')
 
-            setTimeout(() => {
-                // Simulate success/failure of response
-                if (new Date().getTime() % 2 == 0) {
-                    setError(button, 'Download Failed')
-                } else {
-                    setSuccess(button, 'File Downloaded')
-                }
+              setTimeout(() => {
+                  // Simulate success/failure of response
+                  if (new Date().getTime() % 2 == 0) {
+                      setError(button, 'Download Failed')
+                  } else {
+                      setSuccess(button, 'File Downloaded')
+                  }
 
-            }, 4000) // Simulate response time
+              }, 4000) // Simulate response time
+            })
         })
+
     </script>
 </body>
 
